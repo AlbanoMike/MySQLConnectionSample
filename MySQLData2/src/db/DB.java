@@ -40,10 +40,9 @@ public class DB {
         }
         return conn;
     }
-    public static void closeConnection(){
+    public static void closeConnection(Connection conn){
         if(conn != null) {
             try {
-
                 conn.close();
             } catch (SQLException e) {
                 throw new DbException(e.getMessage());
