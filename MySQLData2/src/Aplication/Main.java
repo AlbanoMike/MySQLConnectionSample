@@ -15,7 +15,7 @@ public class Main {
       try {
             conn = DB.getConnection();
             st = conn.prepareStatement("INSERT INTO coursejdbc.seller (Name, Email, BirthDate, BaseSalary, DepartmentId) VALUES"
-            + "(?,?,?,?,?)");
+            + "(?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
             st.setString(1, "Carl Purple");
             st.setString(2, "Carl@gmail.com");
             st.setDate(3, new java.sql.Date(sfd.parse("22/04/1985").getTime()));
@@ -23,13 +23,22 @@ public class Main {
             st.setInt(5,4);
 
             int rowsaffected = st.executeUpdate();
+            if(rowsaffected > 0){
+                    ResultSet rs = st.getGeneratedKeys();
+                    while (rs.next()){
+                        int id = rs.getInt(1);
+                        System.out.println("Done, ID igual a: "+ id);
+                    }
+            }else {
+                System.out.println("No rows affected");
+            }
         }
         catch (SQLException | ParseException e){
             e.printStackTrace();
         }
         finally {
             DB.CloseStatment(st);
-            DB.getConnection();
+            DB.closeConnection(conn);
         }
     }
 }
