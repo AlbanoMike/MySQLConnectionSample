@@ -1,9 +1,7 @@
 package db;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 public class DB {
@@ -20,7 +18,8 @@ public class DB {
             try {
                  Properties props = LoaProperties();
                  String url = props.getProperty("dburl");
-                 conn = DriverManager.getConnection(url, props);
+                 //conn = DriverManager.getConnection(url, props);
+                 conn = DriverManager.getConnection(props.getProperty("dburl"), props);
                  }
             catch (SQLException | FileNotFoundException e){
                 throw new DbException(e.getMessage());
@@ -41,11 +40,20 @@ public class DB {
         }
         return conn;
     }
-
     public static void closeConnection(){
         if(conn != null) {
             try {
+
                 conn.close();
+            } catch (SQLException e) {
+                throw new DbException(e.getMessage());
+            }
+        }
+    }
+    public static void CloseStatment(Statement st){
+        if(st != null) {
+            try {
+                st.close();
             } catch (SQLException e) {
                 throw new DbException(e.getMessage());
             }
@@ -57,7 +65,7 @@ public class DB {
     //aquivo ou da String. sendo assim no arquivo para ser reconhecido cada propety, vc terá que pular uma linha para cada
     //Já no StringReader vc precisa colocar a quebra de linhas "\n" pra ele reconhcer de forma individual
     private static Properties LoaProperties() throws FileNotFoundException {
-        try(FileInputStream fs = new FileInputStream("db.propeties")){
+        try(FileInputStream fs = new FileInputStream("C:\\Users\\mikel\\IdeaProjects\\MySQLConnectionSample\\MySQLData2\\src\\Db.propeties")){
             Properties props = new Properties();
             props.load(fs);
             return props;
