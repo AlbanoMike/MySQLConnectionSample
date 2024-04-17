@@ -1,11 +1,8 @@
 package db;
-
 import java.io.*;
 import java.sql.*;
 import java.util.Properties;
-
 public class DB {
-
     private static Connection conn = null;
 
     //o Método getConnection usa as propetys dos métodos LoaProperties
@@ -26,7 +23,6 @@ public class DB {
             }
         }
         return conn;
-
     } public static Connection getConnection2(){
         if(conn == null) {
             try {
@@ -72,6 +68,10 @@ public class DB {
         catch (IOException e){
             throw new DbException(e.getMessage());
         }
+        
+        //caso vc não coloque o "\n" o StringReader le a linha inteira por exemplo
+        //"user=developer, "password=7504\n" = vai ficar toda essa frase em uma propety
+        //
     }  private static Properties LoaProperties2() throws IOException {
         StringReader sr = new StringReader("user=developer\n" +
                 "password=7504\n" +
@@ -80,5 +80,18 @@ public class DB {
         Properties props = new Properties();
         props.load(sr);
         return props;
+    }
+    //Para usar esse Loadpropetys3 vc precisa ter um arquivo na mesma hieraqrquia das pastas idea, out etc
+    //caso contrario vc precisa especificar o caminho, por exemplo, se caso esticesse dentro de src
+    // vc colocaria assim src/DB.propeties
+    private static Properties loadProperties3() {
+        try (FileInputStream fs = new FileInputStream("db.properties")) {
+            Properties props = new Properties();
+            props.load(fs);
+            return props;
+        }
+        catch (IOException e) {
+            throw new DbException(e.getMessage());
+        }
     }
 }
