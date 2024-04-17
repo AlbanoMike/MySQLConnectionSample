@@ -18,12 +18,13 @@ public class DB {
                  //conn = DriverManager.getConnection(url, props);
                  conn = DriverManager.getConnection(props.getProperty("dburl"), props);
                  }
-            catch (SQLException | FileNotFoundException e){
+            catch (SQLException | IOException e){
                 throw new DbException(e.getMessage());
             }
         }
         return conn;
-    } public static Connection getConnection2(){
+    }
+    public static Connection getConnection2(){
         if(conn == null) {
             try {
                  Properties props = LoaProperties2();
@@ -68,7 +69,7 @@ public class DB {
         catch (IOException e){
             throw new DbException(e.getMessage());
         }
-        
+
         //caso vc não coloque o "\n" o StringReader le a linha inteira por exemplo
         //"user=developer, "password=7504\n" = vai ficar toda essa frase em uma propety
         //
@@ -84,8 +85,8 @@ public class DB {
     //Para usar esse Loadpropetys3 vc precisa ter um arquivo na mesma hieraqrquia das pastas idea, out etc
     //caso contrario vc precisa especificar o caminho, por exemplo, se caso esticesse dentro de src
     // vc colocaria assim src/DB.propeties
-    private static Properties loadProperties3() {
-        try (FileInputStream fs = new FileInputStream("db.properties")) {
+    private static Properties LoaProperties3() throws IOException {
+        try (FileInputStream fs = new FileInputStream("db.properties2")) {
             Properties props = new Properties();
             props.load(fs);
             return props;
